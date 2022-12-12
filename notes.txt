@@ -1,0 +1,28 @@
+Start by designing classes (nouns, main characters)
+
+Card
+    - value
+    - rank
+    - suit
+
+Dealer
+    - hand
+Player
+    - hand
+
+Deck
+    - cards
+    each of these cards is an instance of Card class
+
+Game
+    - Player
+    - Dealer
+    - Deck
+    - Card
+
+** methods (actions)
+    - Shuffle
+Shuffle Deck
+Define number of players
+Deal hands to players, dealer, and user
+
