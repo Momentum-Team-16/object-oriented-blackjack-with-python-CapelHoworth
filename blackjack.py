@@ -1,9 +1,28 @@
 import random
 import os
+import time
 
 SUITS = ['♥️', '♠️', '♦️', '♣️']
 RANKS = ['A', 'K', 'Q', 'J', 10, 9, 8, 7, 6, 5, 4, 3, 2]
 FACE = ['K', 'Q', 'J']
+
+
+def play_again():
+    replay = input("\n Deal another? y / n").lower()
+    while replay not in ["yes", "no", "y", "n"]:
+        print("\n Not valid input.")
+        replay = input("\n Deal another? y / n").lower()
+
+    if replay in ["y", "yes"]:
+        play_again()
+    else:
+        print("\n Have fun out there in the human world!")
+        os.system('clear')
+
+
+def sleep_clear(num):
+    time.sleep(num)
+    os.system('clear')
 
 
 class Card:
@@ -63,10 +82,6 @@ class Dealer(Player):
         return hand_as_string
 
 
-# class User:
-#     def __init__(self):
-#         self.player_hand = []
-
 class Game:
     def __init__(self):
         self.deck = Deck(SUITS, RANKS)
@@ -106,14 +121,20 @@ class Game:
                 num_ace -= 1
 
 
-new_game = Game()
-new_game.create_players()
-new_game.deal_players()
+def play_game():
+    print('♣️♦️ BLACKJACK ♠️♥️')
+    new_game = Game()
+    new_game.create_players()
+    new_game.deal_players()
 
-for person in new_game.players:
-    if person != new_game.dealer:
-        print(person, person.show_hand())
-        print(person.score)
-    else:
-        print(person, person.hide_hand())
-        print(person.score)
+    for person in new_game.players:
+        if person != new_game.dealer:
+            print(person, person.show_hand())
+            #print(person.score)
+        else:
+            print(person, person.hide_hand())
+            #print(person.score)
+
+
+if __name__ == "__main__":
+    play_game()
