@@ -31,22 +31,27 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-
-class Game:
-    def __init__(self):
-        self.deck = Deck(SUITS, RANKS)
-        self.deck.shuffle()
-
     def deal_card(self, player):
-        dealt_card = self.deck.cards.pop()
+        dealt_card = self.cards.pop()
         player.player_hand.append(dealt_card)
 
 
 class Dealer:
     def __init__(self):
         self.player_hand = []
+        self.name = 'dealer'
 
     def __str__(self):
+        return self.name
+
+    def show_hand(self):
+        hand_as_string = ''
+        for card in self.player_hand:
+            hand_as_string += f'{card}'
+        return hand_as_string
+
+    def hide_hand(self):
+        self.player_hand[1] = ' (__)'
         hand_as_string = ''
         for card in self.player_hand:
             hand_as_string += f'{card}'
@@ -56,24 +61,57 @@ class Dealer:
 class Player:
     def __init__(self):
         self.player_hand = []
+        self.name = 'player'
     
     def __str__(self):
+        return self.name
+
+    def show_hand(self):
         hand_as_string = ''
         for card in self.player_hand:
             hand_as_string += f'{card}'
         return hand_as_string
 
 
-player1 = Player()
-dealer = Dealer()
+# class User:
+#     def __init__(self):
+#         self.player_hand = []
+
+
+class Game:
+    def __init__(self):
+        self.deck = Deck(SUITS, RANKS)
+        self.deck.shuffle()
+        self.players = []
+        self.dealer = Dealer()
+
+    def deal_players(self):
+        while len(self.dealer.player_hand) < 2:
+            for player in self.players:
+                self.deck.deal_card(player)
+
+    def create_players(self):
+        number = input('How many players, player?')
+        number = int(number)
+        counter = 1
+        while len(self.players) < number:
+            player = Player()
+            player.name = f'Player {counter}'
+            self.players.append(player)
+            counter += 1
+        self.players.append(self.dealer)
+
+
 new_game = Game()
+new_game.create_players()
+new_game.deal_players()
 
+for person in new_game.players:
+    if person != new_game.dealer:
+        print(person, person.show_hand())
+    else:
+        print(person, person.hide_hand())
 
-while len(player1.player_hand and dealer.player_hand) < 2:
-    new_game.deal_card(player1)
-    new_game.deal_card(dealer)
-
-
-print(f'Player1 hand: {player1}')
-print(f'Dealer hand: {dealer}')
-print(new_game.deck)
+# print(f'Player1 hand: {new_game.player1}')
+# print(f'Player2 hand: {new_game.player2}')
+# print(f'Dealer hand: {new_game.dealer}')
