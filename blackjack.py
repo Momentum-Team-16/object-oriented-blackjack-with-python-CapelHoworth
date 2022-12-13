@@ -3,6 +3,7 @@ import os
 
 SUITS = ['♥️', '♠️', '♦️', '♣️']
 RANKS = ['A', 'K', 'Q', 'J', 10, 9, 8, 7, 6, 5, 4, 3, 2]
+FACE = ['K', 'Q', 'J']
 
 
 class Card:
@@ -31,37 +32,12 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def deal_card(self, player):
-        dealt_card = self.cards.pop()
-        player.player_hand.append(dealt_card)
-
-
-class Dealer:
-    def __init__(self):
-        self.player_hand = []
-        self.name = 'dealer'
-
-    def __str__(self):
-        return self.name
-
-    def show_hand(self):
-        hand_as_string = ''
-        for card in self.player_hand:
-            hand_as_string += f'{card}'
-        return hand_as_string
-
-    def hide_hand(self):
-        self.player_hand[1] = ' (__)'
-        hand_as_string = ''
-        for card in self.player_hand:
-            hand_as_string += f'{card}'
-        return hand_as_string
-
 
 class Player:
     def __init__(self):
         self.player_hand = []
         self.name = 'player'
+        self.score = 0
     
     def __str__(self):
         return self.name
@@ -72,11 +48,24 @@ class Player:
             hand_as_string += f'{card}'
         return hand_as_string
 
+    def deal_card(self, game):
+        dealt_card = game.deck.cards.pop()
+        self.player_hand.append(dealt_card)
+        game.calculate_score(self)
+
+
+class Dealer(Player):
+    def hide_hand(self):
+        self.player_hand[1] = ' (__)'
+        hand_as_string = ''
+        for card in self.player_hand:
+            hand_as_string += f'{card}'
+        return hand_as_string
+
 
 # class User:
 #     def __init__(self):
 #         self.player_hand = []
-
 
 class Game:
     def __init__(self):
@@ -88,7 +77,7 @@ class Game:
     def deal_players(self):
         while len(self.dealer.player_hand) < 2:
             for player in self.players:
-                self.deck.deal_card(player)
+                player.deal_card(self)
 
     def create_players(self):
         number = input('How many players, player?')
@@ -101,6 +90,21 @@ class Game:
             counter += 1
         self.players.append(self.dealer)
 
+    def calculate_score(self, player):
+        player.score = 0
+        num_ace = 0
+        for card in player.player_hand:
+            if card.rank in range(2, 11):
+                player.score += card.rank
+            elif card.rank in FACE:
+                player.score += 10
+            else:
+                player.score += 11
+                num_ace += 1
+            while num_ace and player.score > 21:
+                player.score -= 10
+                num_ace -= 1
+
 
 new_game = Game()
 new_game.create_players()
@@ -109,9 +113,7 @@ new_game.deal_players()
 for person in new_game.players:
     if person != new_game.dealer:
         print(person, person.show_hand())
+        print(person.score)
     else:
         print(person, person.hide_hand())
-
-# print(f'Player1 hand: {new_game.player1}')
-# print(f'Player2 hand: {new_game.player2}')
-# print(f'Dealer hand: {new_game.dealer}')
+        print(person.score)
