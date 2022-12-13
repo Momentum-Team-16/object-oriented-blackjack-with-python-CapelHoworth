@@ -21,8 +21,10 @@ Game
     - Card
 
 ** methods (actions)
-    - Shuffle
-Shuffle Deck
+    - create deck
+    - Shuffle deck
+    - create players
+    - dealer
 Define number of players
 Deal hands to players, dealer, and user
 
